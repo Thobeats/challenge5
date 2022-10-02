@@ -21,6 +21,10 @@ public class GameManagerX : MonoBehaviour
     private float spaceBetweenSquares = 2.5f; 
     private float minValueX = -3.75f; //  x value of the center of the left-most square
     private float minValueY = -3.75f; //  y value of the center of the bottom-most square
+
+    private float TimeLeft;
+    public bool TimerOn;
+    public TextMeshProUGUI timeText;
     
     // Start the game, remove title screen, reset score, and adjust spawnRate based on difficulty button clicked
     public void StartGame(int difficulty)
@@ -31,6 +35,9 @@ public class GameManagerX : MonoBehaviour
         score = 0;
         UpdateScore(0);
         titleScreen.SetActive(false);
+        TimerOn = true;
+        TimeLeft = 60;
+        timeText.text = "Time: " + 60;
     }
 
     // While game is active spawn a random target
@@ -79,6 +86,7 @@ public class GameManagerX : MonoBehaviour
         gameOverText.gameObject.SetActive(true);
         restartButton.gameObject.SetActive(true);
         isGameActive = false;
+        TimerOn = false;
     }
 
     // Restart game by reloading the scene
@@ -88,7 +96,20 @@ public class GameManagerX : MonoBehaviour
     }
 
     public void setTimer(){
-        
+        if(TimerOn){
+            TimeLeft -= Time.deltaTime;
+
+            if(Mathf.Floor(TimeLeft) == 0){
+                GameOver();
+            }
+            
+            timeText.text = "Time: " + Mathf.Floor(TimeLeft);
+            //Debug.Log(Mathf.Floor(TimeLeft));
+        }
+    }
+
+    void Update(){
+        setTimer();
     }
 
 }
